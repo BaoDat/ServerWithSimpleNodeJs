@@ -24,7 +24,7 @@ var CitySchema = new Schema({
     }
 });
 // a setter
-// CitySchema.path('name').set((inputString) => {
-//     return inputString[0].toUpperCase() + inputString.slice(1);
-// });
+CitySchema.path('name').set((inputString) => {
+    return inputString[0].toUpperCase() + inputString.slice(1);
+});
 module.exports = mongoose.model('City', CitySchema);
