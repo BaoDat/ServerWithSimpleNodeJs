@@ -1,0 +1,9 @@
+use tutorialMongo
+db.createUser({user: "datDang", pwd: "baodat030186", roles: ["readWrite", "dbAdmin", "dbOwner"]})
+Successfully added user: {
+        "user" : "datDang",
+        "roles" : [
+                "readWrite",
+                "dbAdmin",
+                "dbOwner"
+        ]
