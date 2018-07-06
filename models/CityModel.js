@@ -22,7 +22,7 @@ var CitySchema = new Schema({
         }],
         default: ['available']
     },
-    imagUrl:{
+    imageUrl:{
         type: String
     },
     countriesID: Schema.ObjectId

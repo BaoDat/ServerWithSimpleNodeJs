@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 
 // Lay ra tat ca ban ghi
 router.get('/list_all', (req, res, next) => {
-    City.find({}, { name: 1 }).limit(100).exec((err, resultCity) => {
+    City.find({}).limit(100).exec((err, resultCity) => {
         if (err) {
             res.json({
                 ressult: 'failed',
@@ -109,7 +109,7 @@ router.put('/update_a_city', (request, response, next) => {
         });
     }
     let newValues = {};
-    if (request.body.name && request.body.name.length > 2 ) {
+    if (request.body.name && request.body.name.length > 2) {
         newValues.name = request.body.name;
         // newValues.cityDescription = request.body.cityDescription;
     }
@@ -119,7 +119,10 @@ router.put('/update_a_city', (request, response, next) => {
         //Ex: http://localhost:3001/open_image?image_name=upload_e2312e497df8c230b4896fa3b43bb543.jpg
         const serverName = require("os").hostname();
         const serverPort = require("../app").settings.port;
+        console.log(serverName + "  " + serverPort)
         newValues.imageUrl = `${serverName}:${serverPort}/open_image?image_name=${request.body.image_name}`
+        // newValues.imageUrl = `localhost:3001/open_image?image_name=${request.body.image_name}`
+        console.log(newValues.imageUrl)
     }
 
     const options = {
