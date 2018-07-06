@@ -113,6 +113,15 @@ router.put('/update_a_city', (request, response, next) => {
         newValues.name = request.body.name;
         // newValues.cityDescription = request.body.cityDescription;
     }
+
+    //Update image
+    if (request.body.image_name && request.body.image_name.length > 0) {
+        //Ex: http://localhost:3001/open_image?image_name=upload_e2312e497df8c230b4896fa3b43bb543.jpg
+        const serverName = require("os").hostname();
+        const serverPort = require("../app").settings.port;
+        newValues.imageUrl = `${serverName}:${serverPort}/open_image?image_name=${request.body.image_name}`
+    }
+
     const options = {
         new: true, // return the modified document rather than the original.
         multi: true
