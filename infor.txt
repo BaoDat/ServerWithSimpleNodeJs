@@ -7,3 +7,12 @@ Successfully added user: {
                 "dbAdmin",
                 "dbOwner"
         ]
+
+npm start
+mongo --port 27017 -u "datDang" -p "baodat030186" --authenticationDatabase "tutorialMongo"
+use tutorialMongo
+
+// cau lenh query trong mongo
+show collections
+db.cities.find()
+db.cities.find().pretty()

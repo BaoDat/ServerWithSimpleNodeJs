@@ -3,9 +3,62 @@ var router = express.Router();
 var fs = require('fs');
 let City = require('../models/CityModel')
 
+// Lay ra tat ca ban ghi
 router.get('/list_all', (req, res, next) => {
-    res.end("GET req => list_all");
+    City.find({}, { name: 0 }).limit(100).exec((err, resultCity) => {
+        if (err) {
+            res.json({
+                ressult: 'failed',
+                data: [],
+                mess: 'Error is: ' + err
+            })
+            return;
+        }
+        res.json({
+            result: "OK",
+            data: resultCity,
+            count: resultCity.length,
+            mess: "Query list of city successfully"
+        })
+    })
 });
+
+router.get('/infor_City', (request, response) => {
+    if (!request.query.name) {
+        response.json({
+            result: "Failed",
+            data: [],
+            mess: 'Please input name City !!!'
+        });
+    }
+    let queryCondition = {
+        name: new RegExp(request.query.name, 'i')       //tuong tu cau Where name like %abc% trong sql
+        // name: new RegExp('^' + request.query.name + '$', "i"), // phai dung voi ten cua thanh pho trong database
+    };
+
+    const limit = parseInt(request.query.limit) > 0 ? parseInt(request.query.limit) : 100;
+    City.find(queryCondition).limit(limit).sort({ name: 1 }).select({
+        name: 1,
+        foodDescription: 1,
+        created_date: 1,
+        status: 1
+    }).exec((err, resultCity) => {
+        if (err) {
+            response.json({
+                result: "Failed",
+                data: [],
+                mess: "Error is : " + err
+            })
+            return;
+        }
+        response.json({
+            result: 'OK',
+            data: resultCity,
+            count: resultCity.length,
+            mess: "Find successfully"
+        })
+    })
+})
 
 //Them 1 bang ghi vào database
 router.post('/insert_city', (req, res, next) => {
@@ -91,14 +144,14 @@ router.post('/upload_images', (request, response, next) => {
 router.get('/open_image', (request, response, next) => {
     let imageName = 'uploads/' + request.query.image_name;
     fs.readFile(imageName, (err, imageData) => {
-        if(err){
+        if (err) {
             request.json({
                 result: 'Failed',
                 mess: 'Can not read image. Err ' + err
             })
             return;
         }
-        response.writeHead(200, {'Content-Type': 'image/jpeg'});
+        response.writeHead(200, { 'Content-Type': 'image/jpeg' });
         response.end(imageData)
     })
 })
