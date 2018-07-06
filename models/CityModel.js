@@ -21,7 +21,9 @@ var CitySchema = new Schema({
             enum: ['available', 'unavailable']
         }],
         default: ['available']
-    }
+    },
+    countriesID: Schema.ObjectId
+
 });
 // a setter
 CitySchema.path('name').set((inputString) => {

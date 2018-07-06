@@ -1,11 +1,12 @@
-var express = require('express');
-var router = express.Router();
+var router = global.router;
 var fs = require('fs');
 let City = require('../models/CityModel')
+var mongoose = require('mongoose');
+
 
 // Lay ra tat ca ban ghi
 router.get('/list_all', (req, res, next) => {
-    City.find({}, { name: 0 }).limit(100).exec((err, resultCity) => {
+    City.find({}, { name: 1 }).limit(100).exec((err, resultCity) => {
         if (err) {
             res.json({
                 ressult: 'failed',
@@ -32,8 +33,8 @@ router.get('/infor_City', (request, response) => {
         });
     }
     let queryCondition = {
-        name: new RegExp(request.query.name, 'i')       //tuong tu cau Where name like %abc% trong sql
-        // name: new RegExp('^' + request.query.name + '$', "i"), // phai dung voi ten cua thanh pho trong database
+        // name: new RegExp(request.query.name, 'i')       //tuong tu cau Where name like %abc% trong sql
+        name: new RegExp('^' + request.query.name + '$', "i"), // phai dung voi ten cua thanh pho trong database
     };
 
     const limit = parseInt(request.query.limit) > 0 ? parseInt(request.query.limit) : 100;
@@ -51,12 +52,19 @@ router.get('/infor_City', (request, response) => {
             })
             return;
         }
-        response.json({
-            result: 'OK',
-            data: resultCity,
-            count: resultCity.length,
-            mess: "Find successfully"
-        })
+        else if (resultCity.length > 0) {
+            response.json({
+                result: 'OK',
+                data: resultCity,
+                count: resultCity.length,
+                mess: "Find successfully"
+            })
+        } else {
+            response.json({
+                result: "Not found",
+                mess: "Not found"
+            })
+        }
     })
 })
 
@@ -87,12 +95,50 @@ router.post('/insert_city', (req, res, next) => {
     })
 });
 
-router.put('/update_a_city', (req, res, next) => {
-    res.end("PUT req => update_a_city")
+router.put('/update_a_city', (request, response, next) => {
+    let conditions = {}     //Dieu kien de update
+    if (mongoose.Types.ObjectId.isValid(request.body.city_id) == true) {
+        console.log("truoc: " + conditions._id)
+        conditions._id = mongoose.Types.ObjectId(request.body.city_id)
+        console.log("sau: " + conditions._id)
+    } else {
+        response.json({
+            result: "failed",
+            data: {},
+            messege: "You must enter city_id to update"
+        });
+    }
+    let newValues = {};
+    if (request.body.name && request.body.name.length > 2 ) {
+        newValues.name = request.body.name;
+        // newValues.cityDescription = request.body.cityDescription;
+    }
+    const options = {
+        new: true, // return the modified document rather than the original.
+        multi: true
+    }
+    if (mongoose.Types.ObjectId.isValid(request.body.country_id) == true) {
+        newValues.countriesID = mongoose.Types.ObjectId(request.body.country_id);
+    }
+    City.findOneAndUpdate(conditions._id, { $set: newValues }, options, (err, updatedCity) => {
+        if (err) {
+            response.json({
+                result: "failed",
+                data: {},
+                messege: `Cannot update existing city.Error is : ${err}`
+            });
+        } else {
+            response.json({
+                result: "ok",
+                data: updatedCity,
+                messege: "Update city successfully"
+            });
+        }
+    });
 });
 
-router.delete('/update_a_city', (req, res, next) => {
-    res.end("DELETE req => deletedb_a_city")
+router.delete('/delete_a_city', (request, response, next) => {
+    response.end("DELETE req => deletedb_a_city")
 });
 
 router.post('/upload_images', (request, response, next) => {
