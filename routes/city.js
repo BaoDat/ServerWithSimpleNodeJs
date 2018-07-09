@@ -179,8 +179,9 @@ router.post('/upload_images', (request, response, next) => {
         if (arrayOfFiles.length > 0) {
             var fileNames = [];
             arrayOfFiles.forEach((eachFile) => {
-                // fileNames.push(eachFile.path)
-                fileNames.push(eachFile.path.split('\\')[1]);
+                fileNames.push(eachFile)
+                // fileNames.push(eachFile.path.split('\\')[1]);
+                console.log('Duong dan: ' + fileNames)
             });
             response.json({
                 result: "ok",

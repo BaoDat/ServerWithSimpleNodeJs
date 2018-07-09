@@ -1,5 +1,6 @@
+mongo --port 27017
 use tutorialMongo
-db.createUser({user: "datDang", pwd: "baodat030186", roles: ["readWrite", "dbAdmin", "dbOwner"]})
+db.createUser({user: "datDang", pwd: "baodat030196", roles: ["readWrite", "dbAdmin", "dbOwner"]})
 Successfully added user: {
         "user" : "datDang",
         "roles" : [
@@ -7,9 +8,10 @@ Successfully added user: {
                 "dbAdmin",
                 "dbOwner"
         ]
+mongod --auth --port 27017 --dbpath G:\NodeJS\myApp\database
 
 npm start
-mongo --port 27017 -u "datDang" -p "baodat030186" --authenticationDatabase "tutorialMongo"
+mongo --port 27017 -u "datDang" -p "baodat030196" --authenticationDatabase "tutorialMongo"
 use tutorialMongo
 
 // cau lenh query trong mongo

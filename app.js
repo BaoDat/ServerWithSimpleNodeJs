@@ -16,18 +16,18 @@ let options = {
   db: { native_parser: true },
   server: { poolSize: 5 },
   user: 'datDang',
-  pass: 'baodat030186'
+  pass: 'baodat030196'
 }
 
 // Use native Promises
 mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://datDang:baodat030186@localhost:27017/tutorialMongo').then(
-mongoose.connect('mongodb://localhost:27017/tutorialMongo', options).then(
+// mongoose.connect('mongodb://datDang:baodat030186@127.0.0.1:27017/tutorialMongo').then(
+mongoose.connect('mongodb://localhost/tutorialMongo', options).then(
   () => {
     console.log("connect DB successfully");
   },
   err => {
-    console.log('Connection failed. Error: ${err}');
+    console.log('Connection failed. Error: ' + err);
   }
 );
 
